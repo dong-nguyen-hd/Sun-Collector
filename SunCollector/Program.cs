@@ -3,7 +3,10 @@
 // STN: https://fearlessrevolution.com/viewtopic.php?t=3916
 // Thank you all
 
-namespace SunCollector // Note: actual namespace depends on the project name.
+using System;
+using System.Threading.Tasks;
+
+namespace SunCollector
 {
     internal class Program
     {
@@ -19,10 +22,7 @@ namespace SunCollector // Note: actual namespace depends on the project name.
             {
                 var readKeyValue = Console.ReadKey();
 
-                if (ConsoleKey.Spacebar == readKeyValue.Key)
-                {
-                    await Work();
-                }
+                if (ConsoleKey.Spacebar == readKeyValue.Key) await Work();
             }
         }
 

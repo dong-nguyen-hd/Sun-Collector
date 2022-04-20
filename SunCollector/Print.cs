@@ -1,4 +1,6 @@
-﻿namespace SunCollector
+﻿using System;
+
+namespace SunCollector
 {
     internal static class Print
     {
