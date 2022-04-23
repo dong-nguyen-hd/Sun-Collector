@@ -14,6 +14,7 @@ namespace SunCollector
         static async Task Main()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Title = "Sun Collector";
             BusinessLogic obj = new();
             Print.Start();
             await obj.Initial();
@@ -41,6 +42,9 @@ namespace SunCollector
                         break;
                     case ConsoleKey.Y:
                         await obj.InstantRecharge();
+                        break;
+                    case ConsoleKey.U:
+                        await obj.InfinitySun();
                         break;
                     default:
                         break;

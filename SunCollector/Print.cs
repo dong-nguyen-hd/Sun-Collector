@@ -4,6 +4,9 @@ namespace SunCollector
 {
     internal static class Print
     {
+        #region Property
+        public static int Order { get; } = 25; // set to maximum number of trainer value
+        #endregion
         #region Method
         public static void Start()
         {
@@ -16,6 +19,7 @@ namespace SunCollector
             Console.WriteLine("Press any key to continue!");
             Console.ResetColor();
             Console.ReadKey();
+            Console.Clear();
         }
 
         public static void Show(bool enable, string message, string key, int order)
@@ -25,7 +29,7 @@ namespace SunCollector
 
             Console.SetCursorPosition(0, order);
 
-            if(enable)
+            if (enable)
                 Console.ForegroundColor = ConsoleColor.Green;
             else
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -33,15 +37,28 @@ namespace SunCollector
             Console.WriteLine($"{message}: {writeValue} (press {key} to {writeInvert})");
             Console.ResetColor();
 
-            Console.SetCursorPosition(0, 25); // set to maximum number of trainer value
+            Console.SetCursorPosition(0, Order);
         }
 
-        public static void Error(string text)
+        public static void Error(string text, int order)
         {
-            Console.SetCursorPosition(0, 0);
+            Console.SetCursorPosition(0, order);
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Error: {text}");
             Console.ResetColor();
+        }
+
+        public static void RemoveError(int order)
+        {
+            Console.SetCursorPosition(0, order);
+            for (int i = 1; i < 1000; i++)
+            {
+                if (i % 100 == 0) 
+                    Console.WriteLine();
+                else
+                    Console.Write(' ');
+            }
+            Console.SetCursorPosition(0, Order);
         }
         #endregion
 

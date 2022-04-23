@@ -12,22 +12,21 @@ namespace SunCollector
         private Mem _memLib = new Mem();
         private static string[] _nameProcess = { "PlantsVsZombies", "popcapgame1" };
 
-        private static byte[] _initial = new byte[25];
-        private static bool[] _enable = new bool[25];
-        private static string[] _address = new string[25];
+        public byte[] _initial = new byte[25];
+        private bool[] _enable = new bool[25];
+        private string[] _address = new string[25];
         #endregion
 
         #region Method
         public async Task Initial()
         {
-            Array.Clear(_initial);
-            Console.Clear();
             await SunCollector();
             await PlaceAnywhere();
             await BypassSunLimit();
             await ConstantPrice();
             await ShootBackwards();
             await InstantRecharge();
+            await InfinitySun();
         }
 
         #region 0-Q: Auto Collect Sun and Coins
@@ -81,14 +80,14 @@ namespace SunCollector
                     scanResults = await _memLib.AoBScan("0F 84 A9 04 00 00");
                 }
 
-                 _address[1] = scanResults.FirstOrDefault().ToString("X"); // Assume is 4109C9
+                 _address[1] = scanResults.FirstOrDefault().ToString("X"); // Assume is 62B6790F
             }
 
             if (_initial[1] != 0)
             {
-                // To enable: "0F 84 A9 04 00 00"
-                // To disable: "0F 85 A9 04 00 00"
-                string writeValue = _enable[1] ? "0F 85 A9 04 00 00" : "0F 84 A9 04 00 00";
+                // To enable: "0F 84"
+                // To disable: "0F 85"
+                string writeValue = _enable[1] ? "0F 85" : "0F 84";
                 _memLib.WriteMemory(_address[1], "bytes", writeValue);
 
                 _enable[1] = !_enable[1]; // Switch state
@@ -116,7 +115,7 @@ namespace SunCollector
                     scanResults = await _memLib.AoBScan("EB ?? C7 80 ?? ?? ?? ?? ?? ?? ?? ?? 81");
                 }
 
-                _address[2] = scanResults.FirstOrDefault().ToString("X"); // Assume is 494445
+                _address[2] = scanResults.FirstOrDefault().ToString("X"); // Assume is 41E6F5
             }
 
             if (_initial[2] != 0)
@@ -151,7 +150,7 @@ namespace SunCollector
                     scanResults = await _memLib.AoBScan("77 0C 8B D7 E8 B2 F4 FE FF");
                 }
 
-                _address[3] = scanResults.FirstOrDefault().ToString("X"); // Assume is 
+                _address[3] = scanResults.FirstOrDefault().ToString("X"); // Assume is 420925
             }
 
             if (_initial[3] != 0)
@@ -186,7 +185,7 @@ namespace SunCollector
                     scanResults = await _memLib.AoBScan("75 20 83 7D 60 3C");
                 }
 
-                _address[4] = scanResults.FirstOrDefault().ToString("X"); // Assume is 
+                _address[4] = scanResults.FirstOrDefault().ToString("X"); // Assume is 47229B
             }
 
             if (_initial[4] != 0)
@@ -218,7 +217,7 @@ namespace SunCollector
                 if (!scanResults.GetEnumerator().MoveNext())
                 {
                     _enable[5] = true;
-                    scanResults = await _memLib.AoBScan("FF 47 00 02 00 00");
+                    scanResults = await _memLib.AoBScan("FF 47 48 8B 47 24");
                 }
 
                 _address[5] = scanResults.FirstOrDefault().ToString("X"); // Assume is 491E4C
@@ -226,33 +225,70 @@ namespace SunCollector
 
             if (_initial[5] != 0)
             {
-                // To enable: "90 90"
-                // To disable: "75 20"
-                string writeValue = _enable[5] ? "FF 47 24" : "FF 47 00 02 00 00";
+                // To enable: "FF 47 48"
+                // To disable: "FF 47 24"
+                string writeValue = _enable[5] ? "FF 47 24" : "FF 47 48";
                 _memLib.WriteMemory(_address[5], "bytes", writeValue);
-                //if (!_enable[5])
-                //{
-                //    _memLib.WriteMemory("0041E846", "byte", "90");
-                //    _memLib.WriteMemory("0041E847", "byte", "90");
-                //    _memLib.WriteMemory("0041E848", "byte", "90");
-                //    _memLib.WriteMemory("0041E849", "byte", "90");
-                //    _memLib.WriteMemory("0041E84A", "byte", "90");
-                //    _memLib.WriteMemory("0041E84B", "byte", "90");
-                //}
 
                 _enable[5] = !_enable[5]; // Switch state
             }
 
             _initial[5] = 1; // Turn off initial menu
 
-            Print.Show(_enable[5], "6) Instant recharge (fix)", ConsoleKey.Y.ToString(), 5);
+            Print.Show(_enable[5], "6) Instant recharge", ConsoleKey.Y.ToString(), 5);
+        }
+        #endregion
+
+        #region 6-U: Infinity sun
+        public async Task InfinitySun()
+        {
+            // Open the process and check if it was successful before the AoB scan
+            if (!CheckConnect()) await Reload();
+
+            if (string.IsNullOrEmpty(_address[6]))
+            {
+                IEnumerable<long> scanResults = await _memLib.AoBScan("8B 87 78 55 00 00");
+
+                if (!scanResults.GetEnumerator().MoveNext())
+                {
+                    _enable[6] = true;
+                    scanResults = await _memLib.AoBScan("C7 87 78 55 00 00 99 99 00 00");
+                }
+
+                _address[6] = scanResults.FirstOrDefault().ToString("X"); // Assume is 494445
+            }
+
+            if (_initial[6] != 0)
+            {
+                // To enable: "FF 47 48" // mov [edi+00005578],(int)9999
+                // To disable: "FF 47 24"
+                string writeValue = _enable[6] ? "8B 87 78 55 00 00" : "C7 87 78 55 00 00 99 99 00 00";
+                _memLib.WriteMemory(_address[6], "bytes", writeValue);
+
+                _enable[6] = !_enable[6]; // Switch state
+            }
+
+            _initial[6] = 1; // Turn off initial menu
+
+            Print.Show(_enable[6], "7) Infinity sun (error)", ConsoleKey.U.ToString(), 6);
         }
         #endregion
 
         #region Regular work
         private async Task Reload(int milliSeconds = 1500)
         {
-            Print.Error("game is not found or open!\n(You must rename file is: PlantsVsZombies or popcapgame1)");
+            int count = _initial.Length;
+            int index;
+            for (index = 0; index < count; index++)
+            {
+                if (_initial[index] == 0)
+                {
+                    index = index == 0 ? 0 : index + 1;
+                    Print.Error("game is not found or open!\n(You must rename file is: PlantsVsZombies or popcapgame1)", index);
+                    break;
+                }
+            }
+            
             bool isSuccess = true;
 
             while (isSuccess)
@@ -261,7 +297,8 @@ namespace SunCollector
                 await Task.Delay(milliSeconds);
             }
 
-            await Initial();
+            Array.Clear(_address);
+            Print.RemoveError(index);
         }
 
         private bool CheckConnect()
