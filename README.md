@@ -4,8 +4,8 @@ This project building on **.NET 6**
 
 ## Download binary:
 
-* [Game and trainer](https://www.mediafire.com/file/lfbqzoav6u4vyqg/Plants_vs_Zombies.rar/file)
-* [Only trainer](https://www.mediafire.com/file/97mpoagqsu1g8mi/SunCollector.rar/file)
+* [Game and trainer](https://www.mediafire.com/file/tfnf7fz33d104ew/Plants_vs_Zombies.rar/file)
+* [Only trainer](https://www.mediafire.com/file/nl9axysvge9y9lg/SunCollector.rar/file)
 
 ## Feature:
 

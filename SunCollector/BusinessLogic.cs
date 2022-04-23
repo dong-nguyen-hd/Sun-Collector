@@ -12,9 +12,9 @@ namespace SunCollector
         private Mem _memLib = new Mem();
         private static string[] _nameProcess = { "PlantsVsZombies", "popcapgame1" };
 
-        public byte[] _initial = new byte[9];
-        private bool[] _enable = new bool[9];
-        private string[] _address = new string[9];
+        public byte[] _initial = new byte[10];
+        private bool[] _enable = new bool[10];
+        private string[] _address = new string[10];
         #endregion
 
         #region Method
