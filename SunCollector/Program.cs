@@ -14,31 +14,38 @@ namespace SunCollector
         static async Task Main()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-
-            // Initial process
-            await Work(true);
+            BusinessLogic obj = new();
+            Print.Start();
+            await obj.Initial();
 
             while (true)
             {
                 var readKeyValue = Console.ReadKey();
 
-                if (ConsoleKey.Spacebar == readKeyValue.Key) await Work();
+                switch (readKeyValue.Key)
+                {
+                    case ConsoleKey.Q:
+                        await obj.SunCollector();
+                        break;
+                    case ConsoleKey.W:
+                        await obj.PlaceAnywhere();
+                        break;
+                    case ConsoleKey.E:
+                        await obj.BypassSunLimit();
+                        break;
+                    case ConsoleKey.R:
+                        await obj.ConstantPrice();
+                        break;
+                    case ConsoleKey.T:
+                        await obj.ShootBackwards();
+                        break;
+                    case ConsoleKey.Y:
+                        await obj.InstantRecharge();
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
-
-        private static async Task Work(bool initial = false)
-        {
-            BusinessLogic obj = new();
-
-            Console.Clear();
-            Print.Start();
-
-            var result = await obj.Initial(initial);
-
-            if (result.isSuccess)
-                Print.Show(result.isEnable);
-            else
-                await obj.Reload();
         }
         #endregion
     }

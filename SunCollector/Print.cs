@@ -7,26 +7,33 @@ namespace SunCollector
         #region Method
         public static void Start()
         {
+            Console.Clear();
             Console.SetCursorPosition(0, 2);
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(sunflower);
+            Console.SetCursorPosition(0, 0);
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Press any key to continue!");
             Console.ResetColor();
+            Console.ReadKey();
         }
 
-        public static void Show(bool enable)
+        public static void Show(bool enable, string message, string key, int order)
         {
             string writeValue = enable ? "enable" : "disable";
             string writeInvert = !enable ? "enable" : "disable";
 
-            Console.SetCursorPosition(0, 0);
+            Console.SetCursorPosition(0, order);
 
             if(enable)
                 Console.ForegroundColor = ConsoleColor.Green;
             else
                 Console.ForegroundColor = ConsoleColor.Red;
 
-            Console.WriteLine($"Status: {writeValue} (press Space to {writeInvert})");
+            Console.WriteLine($"{message}: {writeValue} (press {key} to {writeInvert})");
             Console.ResetColor();
+
+            Console.SetCursorPosition(0, 25); // set to maximum number of trainer value
         }
 
         public static void Error(string text)
