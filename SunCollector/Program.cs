@@ -44,7 +44,16 @@ namespace SunCollector
                         await obj.InstantRecharge();
                         break;
                     case ConsoleKey.U:
-                        await obj.InfinitySun();
+                        await obj.ReverseSun();
+                        break;
+                    case ConsoleKey.I:
+                        await obj.HealGroundDamage();
+                        break;
+                    case ConsoleKey.O:
+                        await obj.CooldownCobCannon();
+                        break;
+                    case ConsoleKey.P:
+                        await obj.ReverseCoins();
                         break;
                     default:
                         break;

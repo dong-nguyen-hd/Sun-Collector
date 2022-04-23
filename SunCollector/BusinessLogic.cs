@@ -12,9 +12,9 @@ namespace SunCollector
         private Mem _memLib = new Mem();
         private static string[] _nameProcess = { "PlantsVsZombies", "popcapgame1" };
 
-        public byte[] _initial = new byte[25];
-        private bool[] _enable = new bool[25];
-        private string[] _address = new string[25];
+        public byte[] _initial = new byte[9];
+        private bool[] _enable = new bool[9];
+        private string[] _address = new string[9];
         #endregion
 
         #region Method
@@ -26,7 +26,10 @@ namespace SunCollector
             await ConstantPrice();
             await ShootBackwards();
             await InstantRecharge();
-            await InfinitySun();
+            await ReverseSun();
+            await HealGroundDamage();
+            await CooldownCobCannon();
+            await ReverseCoins();
         }
 
         #region 0-Q: Auto Collect Sun and Coins
@@ -80,7 +83,7 @@ namespace SunCollector
                     scanResults = await _memLib.AoBScan("0F 84 A9 04 00 00");
                 }
 
-                 _address[1] = scanResults.FirstOrDefault().ToString("X"); // Assume is 62B6790F
+                _address[1] = scanResults.FirstOrDefault().ToString("X"); // Assume is 4109C9
             }
 
             if (_initial[1] != 0)
@@ -134,7 +137,7 @@ namespace SunCollector
         }
         #endregion
 
-        #region 3-R: Plants Don't get more Expensive in Endless Mode
+        #region 3-R: Constant Price in Endless Mode
         public async Task ConstantPrice()
         {
             // Open the process and check if it was successful before the AoB scan
@@ -165,7 +168,7 @@ namespace SunCollector
 
             _initial[3] = 1; // Turn off initial menu
 
-            Print.Show(_enable[3], "4) Plants Don't get more Expensive in Endless Mode", ConsoleKey.R.ToString(), 3);
+            Print.Show(_enable[3], "4) Constant Price in Endless Mode", ConsoleKey.R.ToString(), 3);
         }
         #endregion
 
@@ -239,30 +242,30 @@ namespace SunCollector
         }
         #endregion
 
-        #region 6-U: Infinity sun
-        public async Task InfinitySun()
+        #region 6-U: Reverse Sun
+        public async Task ReverseSun()
         {
             // Open the process and check if it was successful before the AoB scan
             if (!CheckConnect()) await Reload();
 
             if (string.IsNullOrEmpty(_address[6]))
             {
-                IEnumerable<long> scanResults = await _memLib.AoBScan("8B 87 78 55 00 00");
+                IEnumerable<long> scanResults = await _memLib.AoBScan("2B F3 89 B7 78 55 00 00");
 
                 if (!scanResults.GetEnumerator().MoveNext())
                 {
                     _enable[6] = true;
-                    scanResults = await _memLib.AoBScan("C7 87 78 55 00 00 99 99 00 00");
+                    scanResults = await _memLib.AoBScan("01 DE 89 B7 78 55 00 00");
                 }
 
-                _address[6] = scanResults.FirstOrDefault().ToString("X"); // Assume is 494445
+                _address[6] = scanResults.FirstOrDefault().ToString("X"); // Assume is 41E844
             }
 
             if (_initial[6] != 0)
             {
-                // To enable: "FF 47 48" // mov [edi+00005578],(int)9999
-                // To disable: "FF 47 24"
-                string writeValue = _enable[6] ? "8B 87 78 55 00 00" : "C7 87 78 55 00 00 99 99 00 00";
+                // To enable: "01 DE"
+                // To disable: "2B F3"
+                string writeValue = _enable[6] ? "2B F3" : "01 DE";
                 _memLib.WriteMemory(_address[6], "bytes", writeValue);
 
                 _enable[6] = !_enable[6]; // Switch state
@@ -270,7 +273,112 @@ namespace SunCollector
 
             _initial[6] = 1; // Turn off initial menu
 
-            Print.Show(_enable[6], "7) Infinity sun (error)", ConsoleKey.U.ToString(), 6);
+            Print.Show(_enable[6], "7) Reverse Sun", ConsoleKey.U.ToString(), 6);
+        }
+        #endregion
+
+        #region 7-I: Heal Ground Damage
+        public async Task HealGroundDamage()
+        {
+            // Open the process and check if it was successful before the AoB scan
+            if (!CheckConnect()) await Reload();
+
+            if (string.IsNullOrEmpty(_address[7]))
+            {
+                IEnumerable<long> scanResults = await _memLib.AoBScan("75 05 E8 2C FD 02 00");
+
+                if (!scanResults.GetEnumerator().MoveNext())
+                {
+                    _enable[7] = true;
+                    scanResults = await _memLib.AoBScan("90 90 E8 2C FD 02 00");
+                }
+
+                _address[7] = scanResults.FirstOrDefault().ToString("X"); // Assume is 42057D
+            }
+
+            if (_initial[7] != 0)
+            {
+                // To enable: "90 90"
+                // To disable: "75 05"
+                string writeValue = _enable[7] ? "75 05" : "90 90";
+                _memLib.WriteMemory(_address[7], "bytes", writeValue);
+
+                _enable[7] = !_enable[7]; // Switch state
+            }
+
+            _initial[7] = 1; // Turn off initial menu
+
+            Print.Show(_enable[7], "8) Heal Ground Damage", ConsoleKey.I.ToString(), 7);
+        }
+        #endregion
+
+        #region 8-O: Cooldown for Cob Cannon
+        public async Task CooldownCobCannon()
+        {
+            // Open the process and check if it was successful before the AoB scan
+            if (!CheckConnect()) await Reload();
+
+            if (string.IsNullOrEmpty(_address[8]))
+            {
+                IEnumerable<long> scanResults = await _memLib.AoBScan("0F 85 92 01 00 00 D9");
+
+                if (!scanResults.GetEnumerator().MoveNext())
+                {
+                    _enable[8] = true;
+                    scanResults = await _memLib.AoBScan("90 90 90 90 90 90 D9");
+                }
+
+                _address[8] = scanResults.FirstOrDefault().ToString("X"); // Assume is 464A0A
+            }
+
+            if (_initial[8] != 0)
+            {
+                // To enable: "90 90 90 90 90 90"
+                // To disable: "0F 85 92 01 00 00"
+                string writeValue = _enable[8] ? "0F 85 92 01 00 00" : "90 90 90 90 90 90";
+                _memLib.WriteMemory(_address[8], "bytes", writeValue);
+
+                _enable[8] = !_enable[8]; // Switch state
+            }
+
+            _initial[8] = 1; // Turn off initial menu
+
+            Print.Show(_enable[8], "9) Cooldown for Cob Cannon", ConsoleKey.O.ToString(), 8);
+        }
+        #endregion
+
+        #region 9-P: Reverse Coins
+        public async Task ReverseCoins()
+        {
+            // Open the process and check if it was successful before the AoB scan
+            if (!CheckConnect()) await Reload();
+
+            if (string.IsNullOrEmpty(_address[9]))
+            {
+                IEnumerable<long> scanResults = await _memLib.AoBScan("29 41 50 8B 41 50");
+
+                if (!scanResults.GetEnumerator().MoveNext())
+                {
+                    _enable[9] = true;
+                    scanResults = await _memLib.AoBScan("01 41 50 8B 41 50");
+                }
+
+                _address[9] = scanResults.FirstOrDefault().ToString("X"); // Assume is 4976AA
+            }
+
+            if (_initial[9] != 0)
+            {
+                // To enable: "01 41 50"
+                // To disable: "29 41 50"
+                string writeValue = _enable[9] ? "29 41 50" : "01 41 50";
+                _memLib.WriteMemory(_address[9], "bytes", writeValue);
+
+                _enable[9] = !_enable[9]; // Switch state
+            }
+
+            _initial[9] = 1; // Turn off initial menu
+
+            Print.Show(_enable[9], "10) Reverse Coins", ConsoleKey.P.ToString(), 9);
         }
         #endregion
 
@@ -288,7 +396,7 @@ namespace SunCollector
                     break;
                 }
             }
-            
+
             bool isSuccess = true;
 
             while (isSuccess)

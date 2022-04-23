@@ -5,7 +5,7 @@ namespace SunCollector
     internal static class Print
     {
         #region Property
-        public static int Order { get; } = 25; // set to maximum number of trainer value
+        public static int MaximumOrder { get; } = 11; // Set to maximum number of trainer value
         #endregion
         #region Method
         public static void Start()
@@ -37,7 +37,7 @@ namespace SunCollector
             Console.WriteLine($"{message}: {writeValue} (press {key} to {writeInvert})");
             Console.ResetColor();
 
-            Console.SetCursorPosition(0, Order);
+            Console.SetCursorPosition(0, MaximumOrder);
         }
 
         public static void Error(string text, int order)
@@ -53,12 +53,12 @@ namespace SunCollector
             Console.SetCursorPosition(0, order);
             for (int i = 1; i < 1000; i++)
             {
-                if (i % 100 == 0) 
+                if (i % 100 == 0)
                     Console.WriteLine();
                 else
                     Console.Write(' ');
             }
-            Console.SetCursorPosition(0, Order);
+            Console.SetCursorPosition(0, MaximumOrder);
         }
         #endregion
 
